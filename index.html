@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dossard Collège - Stickman & Code</title>
+    <title>Dossard Collège - Crash Stickman</title>
     <style>
         * {
             box-sizing: border-box;
@@ -101,7 +101,7 @@
                 <div class="dot dot-yellow"></div>
                 <div class="dot dot-green"></div>
             </div>
-            <span class="title-text">alan_stickman_runner.js</span>
+            <span class="title-text">crash_vitesse_1000.js</span>
         </div>
 
         <!-- Zone d'animation Canvas -->
@@ -110,19 +110,11 @@
         </div>
 
         <!-- Zone de code -->
-        <pre><code><span class="comment">// Animation Alan Becker Style - Avancement & Mouvement dynamique</span>
-<span class="keyword">class</span> <span class="orange">Stickman</span> {
-    <span class="function">constructor</span>(x, y) {
-        <span class="keyword">this</span>.x = x;
-        <span class="keyword">this</span>.y = y;
-        <span class="keyword">this</span>.speed = <span class="number">0.35</span>; <span class="comment">// Vitesse lente d'avancement</span>
-        <span class="keyword">this</span>.color = <span class="string">'#ff3355'</span>; <span class="comment">// Rouge Alan Becker</span>
-    }
-
-    <span class="function">update</span>() {
-        <span class="keyword">this</span>.x += <span class="keyword">this</span>.speed;
-        <span class="keyword">this</span>.<span class="function">drawMotionLines</span>(); <span class="comment">// Effet de vitesse visible en capture</span>
-    }
+        <pre><code><span class="comment">// Crash à vitesse 1000 contre le mur du fond</span>
+<span class="keyword">const</span> vitesse = <span class="number">1000</span>;
+<span class="keyword">function</span> <span class="function">crashImpact</span>() {
+    <span class="keyword">let</span> impactForce = vitesse * <span class="number">2.5</span>;
+    <span class="function">console</span>.<span class="function">error</span>(<span class="string">"ERREUR CRITIQUE : Impact violent détecté !"</span>);
 }</code></pre>
     </div>
 
@@ -130,101 +122,13 @@
         const canvas = document.getElementById('stickmanCanvas');
         const ctx = canvas.getContext('2d');
 
-        let x = 60;
-        let cycle = 0;
-
-        function drawAlanStickman(xPos, yPos, walkCycle) {
-            const groundY = yPos;
-            const bodyLength = 32;
-            const headY = groundY - bodyLength - 16;
-            const headX = xPos + 6; // Incliné vers l'avant
-
-            // 1. TRAÎNÉES DE FLOU DE MOUVEMENT (Motion Blur / Ombrage Alan Becker)
-            for (let i = 3; i >= 1; i--) {
-                const ghostX = xPos - (i * 12);
-                const ghostAlpha = 0.15 / i;
-                ctx.strokeStyle = `rgba(255, 51, 85, ${ghostAlpha})`;
-                ctx.lineWidth = 3;
-
-                // Tête fantôme
-                ctx.beginPath();
-                ctx.arc(ghostX + 6, headY, 10, 0, Math.PI * 2);
-                ctx.stroke();
-
-                // Tronc fantôme
-                ctx.beginPath();
-                ctx.moveTo(ghostX + 6, headY + 10);
-                ctx.lineTo(ghostX, headY + bodyLength);
-                ctx.stroke();
-            }
-
-            // 2. LIGNES DE VITESSE / TRAJECTOIRE (Invisibles au repos, ultra dynamiques en image fixe)
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-            ctx.lineWidth = 1.5;
-            ctx.beginPath();
-            // Lignes derrière le dos
-            ctx.moveTo(xPos - 20, headY - 5); ctx.lineTo(xPos - 55, headY - 8);
-            ctx.moveTo(xPos - 15, headY + 15); ctx.lineTo(xPos - 45, headY + 12);
-            ctx.moveTo(xPos - 25, headY + 30); ctx.lineTo(xPos - 60, headY + 30);
-            ctx.stroke();
-
-            // 3. POSE DU STICKMAN (Style Course Alan Becker)
-            ctx.strokeStyle = '#ff3355'; // Rouge vif signature
-            ctx.lineWidth = 3.5;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-
-            // Tête
-            ctx.beginPath();
-            ctx.arc(headX, headY, 10, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // Tronc penché
-            const hipX = xPos;
-            const hipY = headY + bodyLength;
-            ctx.beginPath();
-            ctx.moveTo(headX, headY + 10);
-            ctx.lineTo(hipX, hipY);
-            ctx.stroke();
-
-            // Jambes dynamiques (Amplitude de course)
-            const legSwing = Math.sin(walkCycle) * 22;
-            ctx.beginPath();
-            // Jambe avant
-            ctx.moveTo(hipX, hipY);
-            ctx.lineTo(hipX + legSwing, groundY - Math.abs(Math.cos(walkCycle) * 8));
-            // Jambe arrière
-            ctx.moveTo(hipX, hipY);
-            ctx.lineTo(hipX - legSwing, groundY - Math.abs(Math.sin(walkCycle) * 8));
-            ctx.stroke();
-
-            // Bras balancés
-            const armSwing = Math.cos(walkCycle) * 20;
-            const shoulderX = headX - 2;
-            const shoulderY = headY + 12;
-            ctx.beginPath();
-            // Bras avant
-            ctx.moveTo(shoulderX, shoulderY);
-            ctx.lineTo(shoulderX - armSwing, shoulderY + 12);
-            // Bras arrière
-            ctx.moveTo(shoulderX, shoulderY);
-            ctx.lineTo(shoulderX + armSwing, shoulderY + 12);
-            ctx.stroke();
-
-            // 4. ÉTINCELLES AU SOL (Poussière de course)
-            ctx.fillStyle = '#ffaa33';
-            ctx.beginPath();
-            ctx.arc(hipX - legSwing - 4, groundY - 2, 2.5, 0, Math.PI * 2);
-            ctx.arc(hipX - legSwing - 10, groundY - 5, 1.5, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        function animate() {
+        function drawCrashScene() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             const groundY = 130;
+            const wallX = 680; // Position du mur à droite
 
-            // Ligne de sol
+            // 1. Dessiner le sol
             ctx.strokeStyle = '#30363d';
             ctx.lineWidth = 2;
             ctx.beginPath();
@@ -232,22 +136,108 @@
             ctx.lineTo(canvas.width, groundY);
             ctx.stroke();
 
-            // Dessin du stickman avec effets
-            drawAlanStickman(x, groundY, cycle);
+            // 2. Dessiner le mur vertical avec des fissures d'impact
+            ctx.strokeStyle = '#ff3355';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(wallX, 0);
+            ctx.lineTo(wallX, groundY);
+            ctx.stroke();
 
-            // Déplacement très lent
-            x += 0.35;
-            cycle += 0.08;
+            // Fissures et éclats sur le mur autour de l'impact
+            ctx.strokeStyle = 'rgba(255, 51, 85, 0.7)';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(wallX, 90); ctx.lineTo(wallX - 35, 80);
+            ctx.moveTo(wallX - 35, 80); ctx.lineTo(wallX - 55, 65);
+            ctx.moveTo(wallX, 90); ctx.lineTo(wallX - 25, 105);
+            ctx.moveTo(wallX, 60); ctx.lineTo(wallX - 40, 50);
+            ctx.stroke();
 
-            // Reboucle quand il sort à droite
-            if (x > canvas.width + 50) {
-                x = -40;
+            // 3. Traînées de vitesse extrêmes (provenant de la gauche)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.lineWidth = 2;
+            for (let i = 100; i < wallX - 50; i += 30) {
+                ctx.beginPath();
+                ctx.moveTo(i, 40); ctx.lineTo(i + 40, 40);
+                ctx.moveTo(i + 15, 85); ctx.lineTo(i + 55, 85);
+                ctx.moveTo(i + 5, 115); ctx.lineTo(i + 45, 115);
+                ctx.stroke();
             }
 
-            requestAnimationFrame(animate);
+            // 4. Le Stickman écrasé contre le mur
+            const stickX = wallX - 15;
+            const headY = groundY - 60;
+            
+            ctx.strokeStyle = '#ff3355';
+            ctx.lineWidth = 3.5;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            // Tête écrasée (légèrement aplatie/ovale contre le mur)
+            ctx.beginPath();
+            ctx.ellipse(stickX + 5, headY, 11, 8, Math.PI / 6, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Tronc comprimé
+            const hipY = groundY - 25;
+            ctx.beginPath();
+            ctx.moveTo(stickX + 5, headY + 8);
+            ctx.lineTo(stickX, hipY);
+            ctx.stroke();
+
+            // Bras compressés / projetés en arrière par la décimale d'arrêt
+            ctx.beginPath();
+            ctx.moveTo(stickX, hipY - 15);
+            ctx.lineTo(stickX - 30, hipY - 25); // Bras en arrière
+            ctx.moveTo(stickX, hipY - 15);
+            ctx.lineTo(stickX - 10, hipY + 5);  // Bras replié
+            ctx.stroke();
+
+            // Jambes pliées par le choc
+            ctx.beginPath();
+            ctx.moveTo(stickX, hipY);
+            ctx.lineTo(stickX - 25, groundY - 5);
+            ctx.moveTo(stickX, hipY);
+            ctx.lineTo(stickX - 10, groundY);
+            ctx.stroke();
+
+            // 5. Particules et éclats rouges dispersés au moment de l'impact
+            const particles = [
+                {x: wallX - 25, y: 75, r: 4},
+                {x: wallX - 45, y: 55, r: 3},
+                {x: wallX - 20, y: 95, r: 2.5},
+                {x: wallX - 60, y: 85, r: 5},
+                {x: wallX - 35, y: 110, r: 3.5},
+                {x: wallX - 15, y: 50, r: 2},
+                {x: wallX - 50, y: 40, r: 3},
+                {x: wallX - 70, y: 70, r: 4.5},
+                {x: wallX - 30, y: 30, r: 2},
+            ];
+
+            particles.forEach(p => {
+                ctx.fillStyle = '#ff3355';
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Quelques étincelles jaunes/oranges d'impact
+            const sparks = [
+                {x: wallX - 10, y: 65},
+                {x: wallX - 40, y: 90},
+                {x: wallX - 25, y: 45}
+            ];
+            sparks.forEach(s => {
+                ctx.fillStyle = '#ffa657';
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, 2, 0, Math.PI * 2);
+                ctx.fill();
+            });
         }
 
-        animate();
+        // Dessin unique figé (parfait pour capture d'écran immédiate)
+        drawCrashScene();
     </script>
 
 </body>
