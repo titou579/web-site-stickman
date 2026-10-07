@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stickman & Code</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            font-family: 'Consolas', 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .window {
+            width: 700px;
+            background-color: #252526;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        .title-bar {
+            background-color: #333333;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background-color: #ff5f56; }
+        .dot-yellow { background-color: #ffbd2e; }
+        .dot-green { background-color: #27c93f; }
+
+        .title-text {
+            margin-left: 10px;
+            font-size: 13px;
+            color: #9cdcfe;
+        }
+
+        .animation-container {
+            height: 120px;
+            background-color: #181818;
+            position: relative;
+            border-bottom: 1px solid #333333;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        pre {
+            margin: 0;
+            padding: 20px;
+            background-color: #1e1e1e;
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+
+        /* Coloration syntaxique simple */
+        .keyword { color: #c586c0; }
+        .function { color: #dcdcaa; }
+        .string { color: #ce9178; }
+        .number { color: #b5cea8; }
+        .comment { color: #6a9955; }
+    </style>
+</head>
+<body>
+
+    <div class="window">
+        <!-- Barre de titre type IDE / macOS -->
+        <div class="title-bar">
+            <div class="dot dot-red"></div>
+            <div class="dot dot-yellow"></div>
+            <div class="dot dot-green"></div>
+            <span class="title-text">stickman_animation.js</span>
+        </div>
+
+        <!-- Zone d'animation du Stickman -->
+        <div class="animation-container">
+            <canvas id="stickmanCanvas" width="700" height="120"></canvas>
+        </div>
+
+        <!-- Zone de code -->
+        <pre><code><span class="comment">// Animation d'un stickman en JS natif</span>
+<span class="keyword">const</span> canvas = <span class="function">document.getElementById</span>(<span class="string">'stickmanCanvas'</span>);
+<span class="keyword">const</span> ctx = canvas.<span class="function">getContext</span>(<span class="string">'2d'</span>);
+
+<span class="keyword">let</span> x = <span class="number">50</span>;
+<span class="keyword">function</span> <span class="function">animate</span>() {
+    ctx.<span class="function">clearRect</span>(<span class="number">0</span>, <span class="number">0</span>, canvas.width, canvas.height);
+    
+    <span class="comment">// Dessin du stickman en mouvement</span>
+    ctx.strokeStyle = <span class="string">'#4ec9b0'</span>;
+    ctx.lineWidth = <span class="number">2</span>;
+    
+    <span class="comment">// Tête</span>
+    ctx.<span class="function">beginPath</span>();
+    ctx.<span class="function">arc</span>(x, <span class="number">45</span>, <span class="number">10</span>, <span class="number">0</span>, Math.PI * <span class="number">2</span>);
+    ctx.<span class="function">stroke</span>();
+
+    x += <span class="number">0.5</span>; <span class="comment">// Vitesse lente</span>
+    <span class="function">requestAnimationFrame</span>(animate);
+}
+<span class="function">animate</span>();</code></pre>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('stickmanCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let x = 50;
+        let walkCycle = 0;
+
+        function drawStickman(xPos, cycle) {
+            ctx.strokeStyle = '#4ec9b0';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            const groundY = 95;
+            const bodyHeight = 35;
+            const headY = groundY - bodyHeight - 15;
+
+            // Tête
+            ctx.beginPath();
+            ctx.arc(xPos, headY, 9, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Corps (tronc)
+            const hipY = headY + 18;
+            ctx.beginPath();
+            ctx.moveTo(xPos, headY + 9);
+            ctx.lineTo(xPos, hipY);
+            ctx.stroke();
+
+            // Bras animés
+            const armSwing = Math.sin(cycle) * 12;
+            ctx.beginPath();
+            ctx.moveTo(xPos, hipY - 10);
+            ctx.lineTo(xPos + armSwing, hipY + 5);
+            ctx.moveTo(xPos, hipY - 10);
+            ctx.lineTo(xPos - armSwing, hipY + 5);
+            ctx.stroke();
+
+            // Jambes animées
+            const legSwing = Math.cos(cycle) * 15;
+            ctx.beginPath();
+            ctx.moveTo(xPos, hipY);
+            ctx.lineTo(xPos + legSwing, groundY);
+            ctx.moveTo(xPos, hipY);
+            ctx.lineTo(xPos - legSwing, groundY);
+            ctx.stroke();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Dessiner le sol
+            ctx.strokeStyle = '#333333';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, 95);
+            ctx.lineTo(700, 95);
+            ctx.stroke();
+
+            // Dessiner et faire avancer le stickman
+            drawStickman(x, walkCycle);
+
+            x += 0.4; // Avancement lent
+            walkCycle += 0.05; // Vitesse du balancement des membres
+
+            // Boucle pour qu'il revienne au début quand il sort
+            if (x > canvas.width + 30) {
+                x = -30;
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+
+</body>
+</html>
