@@ -3,33 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stickman & Code</title>
+    <title>Dossard Collège - Stickman & Code</title>
     <style>
-        body {
+        * {
+            box-sizing: border-box;
             margin: 0;
-            background-color: #1e1e1e;
-            color: #d4d4d4;
-            font-family: 'Consolas', 'Courier New', monospace;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: 'Consolas', 'Fira Code', 'Courier New', monospace;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            overflow: hidden;
         }
 
         .window {
-            width: 700px;
-            background-color: #252526;
-            border: 1px solid #333333;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 780px;
+            background-color: #161b22;
+            border: 2px solid #30363d;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
             overflow: hidden;
         }
 
         .title-bar {
-            background-color: #333333;
-            padding: 10px 15px;
+            background-color: #21262d;
+            padding: 12px 18px;
             display: flex;
             align-items: center;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .dots {
+            display: flex;
             gap: 8px;
         }
 
@@ -44,148 +55,193 @@
         .dot-green { background-color: #27c93f; }
 
         .title-text {
-            margin-left: 10px;
-            font-size: 13px;
-            color: #9cdcfe;
+            margin-left: 15px;
+            font-size: 14px;
+            color: #8b949e;
+            font-weight: bold;
         }
 
-        .animation-container {
-            height: 120px;
-            background-color: #181818;
+        .canvas-container {
             position: relative;
-            border-bottom: 1px solid #333333;
-            overflow: hidden;
+            background-color: #0d1117;
+            border-bottom: 1px solid #30363d;
         }
 
         canvas {
             display: block;
+            width: 100%;
+            height: 160px;
         }
 
         pre {
-            margin: 0;
-            padding: 20px;
-            background-color: #1e1e1e;
-            font-size: 14px;
-            line-height: 1.5;
+            padding: 22px;
+            background-color: #161b22;
+            font-size: 15px;
+            line-height: 1.6;
             overflow-x: auto;
+            color: #e6edf3;
         }
 
-        /* Coloration syntaxique simple */
-        .keyword { color: #c586c0; }
-        .function { color: #dcdcaa; }
-        .string { color: #ce9178; }
-        .number { color: #b5cea8; }
-        .comment { color: #6a9955; }
+        /* Coloration syntaxique style VS Code */
+        .keyword { color: #ff7b72; font-weight: bold; }
+        .function { color: #d2a8ff; }
+        .string { color: #a5d6ff; }
+        .number { color: #79c0ff; }
+        .comment { color: #8b949e; font-style: italic; }
+        .orange { color: #ffa657; }
     </style>
 </head>
 <body>
 
     <div class="window">
-        <!-- Barre de titre type IDE / macOS -->
+        <!-- Barre de titre -->
         <div class="title-bar">
-            <div class="dot dot-red"></div>
-            <div class="dot dot-yellow"></div>
-            <div class="dot dot-green"></div>
-            <span class="title-text">stickman_animation.js</span>
+            <div class="dots">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+            </div>
+            <span class="title-text">alan_stickman_runner.js</span>
         </div>
 
-        <!-- Zone d'animation du Stickman -->
-        <div class="animation-container">
-            <canvas id="stickmanCanvas" width="700" height="120"></canvas>
+        <!-- Zone d'animation Canvas -->
+        <div class="canvas-container">
+            <canvas id="stickmanCanvas" width="780" height="160"></canvas>
         </div>
 
         <!-- Zone de code -->
-        <pre><code><span class="comment">// Animation d'un stickman en JS natif</span>
-<span class="keyword">const</span> canvas = <span class="function">document.getElementById</span>(<span class="string">'stickmanCanvas'</span>);
-<span class="keyword">const</span> ctx = canvas.<span class="function">getContext</span>(<span class="string">'2d'</span>);
+        <pre><code><span class="comment">// Animation Alan Becker Style - Avancement & Mouvement dynamique</span>
+<span class="keyword">class</span> <span class="orange">Stickman</span> {
+    <span class="function">constructor</span>(x, y) {
+        <span class="keyword">this</span>.x = x;
+        <span class="keyword">this</span>.y = y;
+        <span class="keyword">this</span>.speed = <span class="number">0.35</span>; <span class="comment">// Vitesse lente d'avancement</span>
+        <span class="keyword">this</span>.color = <span class="string">'#ff3355'</span>; <span class="comment">// Rouge Alan Becker</span>
+    }
 
-<span class="keyword">let</span> x = <span class="number">50</span>;
-<span class="keyword">function</span> <span class="function">animate</span>() {
-    ctx.<span class="function">clearRect</span>(<span class="number">0</span>, <span class="number">0</span>, canvas.width, canvas.height);
-    
-    <span class="comment">// Dessin du stickman en mouvement</span>
-    ctx.strokeStyle = <span class="string">'#4ec9b0'</span>;
-    ctx.lineWidth = <span class="number">2</span>;
-    
-    <span class="comment">// Tête</span>
-    ctx.<span class="function">beginPath</span>();
-    ctx.<span class="function">arc</span>(x, <span class="number">45</span>, <span class="number">10</span>, <span class="number">0</span>, Math.PI * <span class="number">2</span>);
-    ctx.<span class="function">stroke</span>();
-
-    x += <span class="number">0.5</span>; <span class="comment">// Vitesse lente</span>
-    <span class="function">requestAnimationFrame</span>(animate);
-}
-<span class="function">animate</span>();</code></pre>
+    <span class="function">update</span>() {
+        <span class="keyword">this</span>.x += <span class="keyword">this</span>.speed;
+        <span class="keyword">this</span>.<span class="function">drawMotionLines</span>(); <span class="comment">// Effet de vitesse visible en capture</span>
+    }
+}</code></pre>
     </div>
 
     <script>
         const canvas = document.getElementById('stickmanCanvas');
         const ctx = canvas.getContext('2d');
 
-        let x = 50;
-        let walkCycle = 0;
+        let x = 60;
+        let cycle = 0;
 
-        function drawStickman(xPos, cycle) {
-            ctx.strokeStyle = '#4ec9b0';
-            ctx.lineWidth = 2;
+        function drawAlanStickman(xPos, yPos, walkCycle) {
+            const groundY = yPos;
+            const bodyLength = 32;
+            const headY = groundY - bodyLength - 16;
+            const headX = xPos + 6; // Incliné vers l'avant
+
+            // 1. TRAÎNÉES DE FLOU DE MOUVEMENT (Motion Blur / Ombrage Alan Becker)
+            for (let i = 3; i >= 1; i--) {
+                const ghostX = xPos - (i * 12);
+                const ghostAlpha = 0.15 / i;
+                ctx.strokeStyle = `rgba(255, 51, 85, ${ghostAlpha})`;
+                ctx.lineWidth = 3;
+
+                // Tête fantôme
+                ctx.beginPath();
+                ctx.arc(ghostX + 6, headY, 10, 0, Math.PI * 2);
+                ctx.stroke();
+
+                // Tronc fantôme
+                ctx.beginPath();
+                ctx.moveTo(ghostX + 6, headY + 10);
+                ctx.lineTo(ghostX, headY + bodyLength);
+                ctx.stroke();
+            }
+
+            // 2. LIGNES DE VITESSE / TRAJECTOIRE (Invisibles au repos, ultra dynamiques en image fixe)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            // Lignes derrière le dos
+            ctx.moveTo(xPos - 20, headY - 5); ctx.lineTo(xPos - 55, headY - 8);
+            ctx.moveTo(xPos - 15, headY + 15); ctx.lineTo(xPos - 45, headY + 12);
+            ctx.moveTo(xPos - 25, headY + 30); ctx.lineTo(xPos - 60, headY + 30);
+            ctx.stroke();
+
+            // 3. POSE DU STICKMAN (Style Course Alan Becker)
+            ctx.strokeStyle = '#ff3355'; // Rouge vif signature
+            ctx.lineWidth = 3.5;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
 
-            const groundY = 95;
-            const bodyHeight = 35;
-            const headY = groundY - bodyHeight - 15;
-
             // Tête
             ctx.beginPath();
-            ctx.arc(xPos, headY, 9, 0, Math.PI * 2);
+            ctx.arc(headX, headY, 10, 0, Math.PI * 2);
             ctx.stroke();
 
-            // Corps (tronc)
-            const hipY = headY + 18;
+            // Tronc penché
+            const hipX = xPos;
+            const hipY = headY + bodyLength;
             ctx.beginPath();
-            ctx.moveTo(xPos, headY + 9);
-            ctx.lineTo(xPos, hipY);
+            ctx.moveTo(headX, headY + 10);
+            ctx.lineTo(hipX, hipY);
             ctx.stroke();
 
-            // Bras animés
-            const armSwing = Math.sin(cycle) * 12;
+            // Jambes dynamiques (Amplitude de course)
+            const legSwing = Math.sin(walkCycle) * 22;
             ctx.beginPath();
-            ctx.moveTo(xPos, hipY - 10);
-            ctx.lineTo(xPos + armSwing, hipY + 5);
-            ctx.moveTo(xPos, hipY - 10);
-            ctx.lineTo(xPos - armSwing, hipY + 5);
+            // Jambe avant
+            ctx.moveTo(hipX, hipY);
+            ctx.lineTo(hipX + legSwing, groundY - Math.abs(Math.cos(walkCycle) * 8));
+            // Jambe arrière
+            ctx.moveTo(hipX, hipY);
+            ctx.lineTo(hipX - legSwing, groundY - Math.abs(Math.sin(walkCycle) * 8));
             ctx.stroke();
 
-            // Jambes animées
-            const legSwing = Math.cos(cycle) * 15;
+            // Bras balancés
+            const armSwing = Math.cos(walkCycle) * 20;
+            const shoulderX = headX - 2;
+            const shoulderY = headY + 12;
             ctx.beginPath();
-            ctx.moveTo(xPos, hipY);
-            ctx.lineTo(xPos + legSwing, groundY);
-            ctx.moveTo(xPos, hipY);
-            ctx.lineTo(xPos - legSwing, groundY);
+            // Bras avant
+            ctx.moveTo(shoulderX, shoulderY);
+            ctx.lineTo(shoulderX - armSwing, shoulderY + 12);
+            // Bras arrière
+            ctx.moveTo(shoulderX, shoulderY);
+            ctx.lineTo(shoulderX + armSwing, shoulderY + 12);
             ctx.stroke();
+
+            // 4. ÉTINCELLES AU SOL (Poussière de course)
+            ctx.fillStyle = '#ffaa33';
+            ctx.beginPath();
+            ctx.arc(hipX - legSwing - 4, groundY - 2, 2.5, 0, Math.PI * 2);
+            ctx.arc(hipX - legSwing - 10, groundY - 5, 1.5, 0, Math.PI * 2);
+            ctx.fill();
         }
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Dessiner le sol
-            ctx.strokeStyle = '#333333';
-            ctx.lineWidth = 1;
+            const groundY = 130;
+
+            // Ligne de sol
+            ctx.strokeStyle = '#30363d';
+            ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.moveTo(0, 95);
-            ctx.lineTo(700, 95);
+            ctx.moveTo(0, groundY);
+            ctx.lineTo(canvas.width, groundY);
             ctx.stroke();
 
-            // Dessiner et faire avancer le stickman
-            drawStickman(x, walkCycle);
+            // Dessin du stickman avec effets
+            drawAlanStickman(x, groundY, cycle);
 
-            x += 0.4; // Avancement lent
-            walkCycle += 0.05; // Vitesse du balancement des membres
+            // Déplacement très lent
+            x += 0.35;
+            cycle += 0.08;
 
-            // Boucle pour qu'il revienne au début quand il sort
-            if (x > canvas.width + 30) {
-                x = -30;
+            // Reboucle quand il sort à droite
+            if (x > canvas.width + 50) {
+                x = -40;
             }
 
             requestAnimationFrame(animate);
